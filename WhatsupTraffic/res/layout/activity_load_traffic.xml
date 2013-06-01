@@ -18,4 +18,9 @@
         android:onClick="onClickLoadTraffic"
         android:text="@string/LoadTrafficButtonText" />
 
+    <ListView 
+        android:id="@+id/list_statuses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></ListView>
+
 </RelativeLayout>

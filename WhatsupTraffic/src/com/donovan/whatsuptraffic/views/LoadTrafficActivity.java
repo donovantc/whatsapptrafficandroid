@@ -1,6 +1,12 @@
 package com.donovan.whatsuptraffic.views;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import twitter4j.Status;
+
 import com.donovan.whatsuptraffic.R;
+import com.donovan.whatsuptraffic.adapters.StatusDisplayAdapter;
 import com.donovan.whatsuptraffic.presenters.LoadTrafficPresenter;
 import com.donovan.whatsuptraffic.views.interfaces.ILoadTrafficView;
 import com.donovan.whatsuptraffic.views.interfaces.IView;
@@ -12,11 +18,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
 
 	private LoadTrafficPresenter loadTrafficPresenter;
+	private ArrayList<Status> statuses;
+	private StatusDisplayAdapter statusDisplayAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +49,8 @@ public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
 	 */
 	public void onClickLoadTraffic(View view){
 		Log.d("Hello", "Clicked load traffic");
-		showUserMessage("Load Traffic Button Pushed!");
+		loadTrafficPresenter.loadTraffic();
+		
 	}
 
 	@Override
@@ -52,6 +62,17 @@ public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
 		
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
+		
+	}
+
+	@Override
+	public void showTrafficTweets(List<Status> tweetList) {
+		Log.i("Hello", "No. Of Tweets: " + tweetList.size());
+		
+		ListView lstView = (ListView)findViewById(R.id.list_statuses);
+		
+		statusDisplayAdapter = new StatusDisplayAdapter(this, new ArrayList<Status>(tweetList));
+		lstView.setAdapter(statusDisplayAdapter);	
 		
 	}
 
