@@ -2,14 +2,18 @@ package com.donovan.whatsuptraffic.adapters;
 
 import java.util.ArrayList;
 
-import com.donovan.whatsuptraffic.views.StatusView;
+import com.donovan.whatsuptraffic.R;
 
 import twitter4j.Status;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 public class StatusDisplayAdapter extends BaseAdapter {
 
@@ -18,9 +22,15 @@ public class StatusDisplayAdapter extends BaseAdapter {
 	
 	public StatusDisplayAdapter(Context context, ArrayList<Status> statuses)
 	{
+		super();
 		this.context = context;
 		this.statuses = statuses;
 	}
+	
+	static class ViewHolder {
+	    public TextView userText;
+	    public TextView statusText;
+	  }
 	
 	@Override
 	public int getCount() {
@@ -42,17 +52,17 @@ public class StatusDisplayAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		StatusView statusView;
 		
-		if (convertView == null)
-			statusView = new StatusView(this.context, statuses.get(position));
-		else{
-			statusView = (StatusView) convertView;
-			statusView.setUserTextView(statuses.get(position).getSource());
-			statusView.setStatusMessageTextView(statuses.get(position).getText());
-		}
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = inflater.inflate(R.layout.status_row_view, parent, false);
+		TextView textUserView = (TextView) rowView.findViewById(R.id.usertext);
+		TextView textStatusView = (TextView) rowView.findViewById(R.id.statustext);
 		
-		return statusView;
+		Status status = (Status)this.getItem(position);
+		textUserView.setText(status.getUser().getName());
+		textStatusView.setText(status.getText());
+		
+	    return rowView;
 	}
 
 }

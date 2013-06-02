@@ -13,12 +13,18 @@ import com.donovan.whatsuptraffic.views.interfaces.IView;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
@@ -26,14 +32,18 @@ public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
 	private LoadTrafficPresenter loadTrafficPresenter;
 	private ArrayList<Status> statuses;
 	private StatusDisplayAdapter statusDisplayAdapter;
+	private ListView listView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_load_traffic);
 		
+		listView = (ListView)findViewById(R.id.list_statuses);
+		
 		//initialise LoadTrafficPresenter
 		loadTrafficPresenter = new LoadTrafficPresenter(this);
+		loadTrafficPresenter.loadTraffic();
 	}
 
 	@Override
@@ -48,14 +58,13 @@ public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
 	 * @param view The view for which the onClick event occurs
 	 */
 	public void onClickLoadTraffic(View view){
-		Log.d("Hello", "Clicked load traffic");
+		Log.d("LoadTrafficActivity", "Clicked load traffic");
 		loadTrafficPresenter.loadTraffic();
-		
 	}
 
 	@Override
 	public void showUserMessage(String message) {
-		Log.d("Hello", "Showing toast");
+		Log.d("LoadTrafficActivity", "Showing toast");
 		Context context = getApplicationContext();
 		CharSequence text = message;
 		int duration = Toast.LENGTH_LONG;
@@ -69,10 +78,15 @@ public class LoadTrafficActivity extends Activity implements ILoadTrafficView{
 	public void showTrafficTweets(List<Status> tweetList) {
 		Log.i("Hello", "No. Of Tweets: " + tweetList.size());
 		
-		ListView lstView = (ListView)findViewById(R.id.list_statuses);
+		ArrayList<String> array = new ArrayList<String>();
+		for(Status s : tweetList){
+			array.add(s.getText());
+		}
 		
+		//ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, array);
 		statusDisplayAdapter = new StatusDisplayAdapter(this, new ArrayList<Status>(tweetList));
-		lstView.setAdapter(statusDisplayAdapter);	
+		listView.setAdapter(statusDisplayAdapter);
+		
 		
 	}
 
